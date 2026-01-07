@@ -1,71 +1,73 @@
-.todo-container{
-    max-width: 500px;
-    margin: 60px auto;
-    background-color: rgb(240, 248, 255);
-    padding: 2rem;
-    border-radius: 1rem;
+.todo-container {
+  max-width: 500px;
+  margin: 60px auto;
+  background-color: rgb(240, 248, 255);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
 }
 
-.todo-container h1{
-    text-align: center;
-    color: black;
+form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-form{
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+form input,
+.todo-input {
+  flex: 1;
+  padding: 0.8rem;
+  font-size: 16px;
+  border: 2px solid #cccccc;
+  border-radius: 0.5rem;
 }
 
-form input{
-    flex: 1;
-    padding: 0.8rem;
-    border: 2px solid #cccccc;
-    border-radius: 0.5rem;
+form button {
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  background-color: rgb(101, 101, 203);
+  color: #ffffff;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
-form button{
-    padding: 1rem 1.2rem;
-    margin-right: 1rem;
-    font-size: 1rem;
-    border: none;
-    background-color: rgb(101, 101, 203);
-    color: #ffffff;
-    border-radius: 0.5rem;
-    cursor: pointer;
+.todo-list {
+  list-style: none;
+  padding: 0;
 }
 
-.todo-list{
-    list-style: none;
-    padding: 0;
+.todo-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.8rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
 }
 
-.todo-list li{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem;
-    margin-bottom: 0.5rem;
-    border-radius: 0.5rem;
-}
-
-.todo-list li.completed span{
-    text-decoration: line-through;
-    color: rgb(131, 9, 9);
-}
-.todo-list li span{
-    cursor: pointer;
-}
-.todo-list li button{
-    background: none;
-    border: none;
-    color: red;
-    font-size: 1.2rem;
-    cursor: pointer;
+.todo-text {
+  flex: 1;
+  text-align: justify; 
+  cursor: pointer;
+  white-space: pre-line;
+  word-break: break-word;
 }
 h2 {
-    margin-top: 1.5rem;
-    color: #333;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: rgb(101, 101, 203);
+}
+.icon-btn:hover {
+  color: #333;
 }

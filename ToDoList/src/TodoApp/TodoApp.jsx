@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './TodoApp.css'
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit, MdSave } from "react-icons/md";
 
 function TodoApp() {
   const [todos, setTodos] = useState(() => {
-
     const savedTodos = localStorage.getItem("todos")
     return savedTodos ? JSON.parse(savedTodos) : []
   })
@@ -13,18 +12,17 @@ function TodoApp() {
   const [editId, setEditId] = useState(null)
   const [editText, setEditText] = useState('')
 
-
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos))
   }, [todos])
 
   function handleAddTodo(e) {
     e.preventDefault()
-    if (input.trim() === '') return
+    if (!input.trim()) return
 
     const newTodo = {
       id: Date.now(),
-      text: input,
+      text: input.trim().slice(0, 100), // ✅ just limit to 100 chars
       completed: false
     }
 
@@ -33,11 +31,9 @@ function TodoApp() {
   }
 
   function toggleComplete(id) {
-    setTodos(
-      todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    )
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
   }
 
   function handleDelete(id) {
@@ -49,24 +45,18 @@ function TodoApp() {
     setEditText(text)
   }
 
-function handleUpdate(id) {
-  const trimmed = editText.trim()
-  if (trimmed === '') {
-    alert('Task cannot be empty')
-    return
+  function handleUpdate(id) {
+    if (!editText.trim()) {
+      alert('Task cannot be empty')
+      return
+    }
+
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text: editText.trim().slice(0, 100) } : todo
+    ))
+    setEditId(null)
+    setEditText('')
   }
-
-  setTodos(
-    todos.map(todo =>
-      todo.id === id ? { ...todo, text: trimmed } : todo
-    )
-  )
-  setEditId(null)
-  setEditText('')
-}
-
-  const pendingTodos = todos.filter(todo => !todo.completed)
-  const completedTodos = todos.filter(todo => todo.completed)
 
   return (
     <div className="todo-container">
@@ -75,34 +65,50 @@ function handleUpdate(id) {
       <form onSubmit={handleAddTodo}>
         <input
           type="text"
-          placeholder="Enter your Task"
+          className="todo-input"
+          placeholder="Enter your Task (Within 100 characters)"
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value.slice(0, 100))}
         />
         <button type="submit">Add</button>
       </form>
 
       <h2>Pending Tasks</h2>
       <ul className="todo-list">
-        {pendingTodos.length === 0 && <p>No pending tasks</p>}
-        {pendingTodos.map(todo => (
+        {todos.filter(todo => !todo.completed).length === 0 && <p>No pending tasks</p>}
+        {todos.filter(todo => !todo.completed).map(todo => (
           <li key={todo.id}>
             {editId === todo.id ? (
               <>
                 <input
                   type="text"
+                  className="todo-input"
                   value={editText}
-                  onChange={e => setEditText(e.target.value)}
+                  onChange={e => setEditText(e.target.value.slice(0, 100))}
+                  onKeyDown={e => e.key === "Enter" && handleUpdate(todo.id)}
                 />
-                <button onClick={() => handleUpdate(todo.id)}>Save</button>
+                <button className="icon-btn" onClick={() => handleUpdate(todo.id)}>
+                  <MdSave />
+                </button>
               </>
             ) : (
               <>
-                <span onClick={() => toggleComplete(todo.id)}>{todo.text}</span>
-                <button onClick={() => handleEdit(todo.id, todo.text)}>Update</button>
-                <button onClick={() => handleDelete(todo.id)}>
-                  <MdDelete />
-                </button>
+                <div className="todo-content">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => toggleComplete(todo.id)}
+                  />
+                  <span className="todo-text">{todo.text}</span>
+                </div>
+                <div className="todo-actions">
+                  <button className="icon-btn" onClick={() => handleEdit(todo.id, todo.text)}>
+                    <MdEdit />
+                  </button>
+                  <button className="icon-btn" onClick={() => handleDelete(todo.id)}>
+                    <MdDelete />
+                  </button>
+                </div>
               </>
             )}
           </li>
@@ -111,13 +117,22 @@ function handleUpdate(id) {
 
       <h2>Completed Tasks</h2>
       <ul className="todo-list">
-        {completedTodos.length === 0 && <p>No completed tasks yet</p>}
-        {completedTodos.map(todo => (
+        {todos.filter(todo => todo.completed).length === 0 && <p>No completed tasks yet</p>}
+        {todos.filter(todo => todo.completed).map(todo => (
           <li key={todo.id} className="completed">
-            <span onClick={() => toggleComplete(todo.id)}>{todo.text}</span>
-            <button onClick={() => handleDelete(todo.id)}>
-              <MdDelete />
-            </button>
+            <div className="todo-content">
+              <input
+                type="checkbox"
+                checked={true}
+                onChange={() => toggleComplete(todo.id)}
+              />
+              <span className="todo-text">{todo.text}</span>
+            </div>
+            <div className="todo-actions">
+              <button className="icon-btn" onClick={() => handleDelete(todo.id)}>
+                <MdDelete />
+              </button>
+            </div>
           </li>
         ))}
       </ul>
